@@ -2,20 +2,79 @@
 
 Code for 4-class dysarthria severity classification (normal / mild / moderate / severe) from the MSDM dataset using audio, text, and video modalities.
 
-## Overview
-
 **Task**: Predict dysarthria severity from short speech samples across 8 tasks (syllable, character, word, sentences). 4 severity classes with ordinal targets mapped to [1.0, 2/3, 1/3, 0.0].
 
-**Primary metric**: `f1_final_4cls = 10 × subject-level macro-F1 + sample-level macro-F1`.  Subject-level prediction averages per-utterance softmax probabilities across all utterances per speaker, then takes argmax.
+**Primary metric**: `f1_final_4cls = 10 × subject-level macro-F1 + sample-level macro-F1`. Subject-level prediction averages per-utterance softmax probabilities per speaker then takes argmax.
 
-**Best approach**: Audio-Visual Divergence MoE fusion. Three clinically-motivated difference-vector experts (speech-text divergence, bilateral lateralization, cross-modal divergence), gated by their L2 norms.
+**Best approach**: Audio-Visual Divergence MoE fusion — three clinically-motivated difference-vector experts (speech-text divergence, bilateral lateralization, cross-modal divergence), gated by their L2 norms.
 
 | Metric | Value |
 |--------|-------|
 | `f1_final_4cls` | 10.009 (seed 14) |
 | `f1_subject_macro_4cls` | 0.922 |
 | `f1_sample_macro_4cls` | 0.787 |
-| `qwk_subject` | — |
+
+---
+
+## Quick start
+
+> **Step 0 — Clone this repo**
+>
+> ```bash
+> git clone <repo-url> MM_Dys_Repo
+> cd MM_Dys_Repo
+> ```
+
+> **Step 1 — Install dependencies**
+>
+> ```bash
+> pip install torch==2.7.1 torchaudio==2.7.1 --index-url https://download.pytorch.org/whl/cu126
+> pip install -r requirements.txt
+> ```
+
+> **Step 2 — Verify the installation (no data needed)**
+>
+> ```bash
+> python scripts/smoke_test.py
+> ```
+> Generates synthetic data, runs a forward pass through all three model branches, and exits 0 if everything is wired up correctly.
+
+> **Step 3 — Obtain and place the MSDM dataset**
+>
+> See [Dataset](#dataset) below.
+
+> **Step 4 — Preprocess video (video / AV branches only)**
+>
+> See [Preprocessing](#preprocessing-video-and-av-branches) below. Audio-only training can skip this.
+
+> **Step 5 — Update config paths**
+>
+> Fill in the `/path/to/...` placeholders in `configs/data/` — see [Config paths](#config-paths).
+
+> **Step 6 — Train**
+>
+> ```bash
+> # Video branch (run first)
+> python train_video.py --config configs/experiments/video_phase_official.yaml \
+>     --seed 42 --output-dir outputs/video_phase_official/seed_42
+>
+> # Audio + text branch (can run in parallel with video)
+> python train_audio.py --config configs/experiments/audio_text_official.yaml \
+>     --seed 42 --output-dir outputs/audio_text_official/seed_42
+>
+> # AV fusion (requires checkpoints from both branches above)
+> python train_av.py --config configs/experiments/av_fusion_official.yaml \
+>     --seed 14 --output-dir outputs/av_fusion_official/seed_14
+> ```
+> Full multi-seed training is described in [Training](#training-3-step-pipeline).
+
+> **Step 7 — Evaluate**
+>
+> ```bash
+> python scripts/evaluate.py \
+>     --checkpoint outputs/av_fusion_official/seed_14/best_e001s000500.pt \
+>     --test-split /path/to/msdm/splits/msdm_test.json
+> ```
 
 ---
 
@@ -49,9 +108,11 @@ MM_Dys_Repo/
 │   ├── runtime.py              # set_seed with deterministic mode
 │   └── __init__.py
 ├── scripts/
+│   ├── extract_flow_features.py   # Run SEA-RAFT on MSDM videos → per-utterance .npz flow files
 │   ├── precompute_descriptors.py  # Build 14-D flow descriptor cache from SEA-RAFT NPZ
 │   ├── evaluate.py                # Standalone evaluation from a saved checkpoint
-│   └── plot_metrics.py            # Plot confusion matrices and per-task F1 from metrics JSON
+│   ├── plot_metrics.py            # Plot confusion matrices and per-task F1 from metrics JSON
+│   └── smoke_test.py              # End-to-end pipeline check with synthetic data (no MSDM needed)
 ├── configs/
 │   ├── data/                   # video_phase.yaml, audio_text.yaml, av_joint.yaml
 │   ├── model/                  # video_phase_full.yaml, audio_text.yaml, av_fusion_divergence_moe.yaml
@@ -65,9 +126,7 @@ MM_Dys_Repo/
 
 ---
 
-## Prerequisites
-
-### Dataset access
+## Dataset
 
 The MSDM dataset is available **by request only**. To obtain access, contact the dataset authors and follow the access procedure described in the original MSDM paper.
 
@@ -104,14 +163,20 @@ Once access is granted, organise the data in the following layout (exact directo
 
 `filename` is the bare stem used to locate `video/<filename>.avi` and `audio/wav/<filename>.wav`. `severity` must be one of `norm`, `mild`, `moderate`, `severe`. `transcript` is required for the audio+text and AV branches.
 
-### Requirements
+## Installation
 
 ```bash
 pip install torch==2.7.1 torchaudio==2.7.1 --index-url https://download.pytorch.org/whl/cu126
 pip install -r requirements.txt
 ```
 
-### Preprocessing (video and AV branches)
+Verify with:
+
+```bash
+python scripts/smoke_test.py
+```
+
+## Preprocessing (video and AV branches)
 
 The video and AV fusion branches require two preprocessing steps before training. Audio-only training can skip this section.
 
@@ -159,9 +224,9 @@ python scripts/precompute_descriptors.py \
 
 This reads each SEA-RAFT `.npz` alongside its `.avi` file and writes a single per-utterance `.npz` into `--output-dir` containing the 14-D descriptor vector for each phase × hemiface combination.
 
-#### Update config paths
+## Config paths
 
-After completing both preprocessing steps, fill in the `/path/to/...` placeholders in the data configs:
+After placing the dataset and running preprocessing, fill in the `/path/to/...` placeholders in the data configs:
 
 | Config file | Keys to update |
 |---|---|

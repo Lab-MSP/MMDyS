@@ -1,0 +1,29 @@
+# Loss weights for AVFusionModel — Divergence MoE
+# Replicates: msdm_av_fusion_divergence_moe_official
+
+# Video branch auxiliary losses
+lambda_vid_intra:    0.5
+lambda_vid_softdiag: 0.4
+lambda_vid_ordinal:  0.4
+
+# Audio branch auxiliary losses
+lambda_aud_intra:    0.5
+lambda_aud_softdiag: 0.4
+lambda_aud_ordinal:  0.4
+
+# Joint CE — primary signal
+lambda_ce: 1.0
+
+# Cross-modal alignment — reduced vs MoE since divergence experts already encode differences
+lambda_xm_info: 0.2
+lambda_xm_ord:  0.1
+
+# Auxiliary per-expert CE (prevents gate from collapsing to a single expert)
+lambda_aux_ce: 0.3
+
+soft_diag_temperature:         0.07
+cross_modal_temperature:       0.07
+ordinal_base_margin:           0.10
+ordinal_gap_margin_scale:      0.12
+cross_modal_ordinal_margin:    0.05
+cross_modal_ordinal_gap_scale: 0.05

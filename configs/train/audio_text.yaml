@@ -1,0 +1,53 @@
+# Training config for AudioTextMMDys (speech/text branch)
+# Best result: msdm_audio_text_v2_official (seed 42)
+device: cuda:0
+epochs:          40
+batch_size:      32
+eval_batch_size: 32
+
+num_workers: 4
+pin_memory:  true
+
+use_balanced_sampler:  true
+balanced_sampler_mode: severity_subject
+
+lr_head:      8.0e-5
+lr_backbone:  1.5e-5
+weight_decay: 0.01
+warmup_ratio: 0.1
+scheduler:    cosine_decay
+min_lr_ratio: 0.0
+
+gradient_accumulation_steps: 1
+max_grad_norm:   1.0
+amp:             true
+amp_dtype:       bfloat16
+label_smoothing: 0.1
+
+best_metric:                 f1_final_4cls
+best_metric_mode:            max
+best_metric_tiebreaker:      qwk_subject
+best_metric_tiebreaker_mode: max
+best_metric_eps:             1.0e-6
+save_top_k_checkpoints:      3
+
+always_eval_test:  true
+
+enable_epoch_jsonl:   true
+use_tqdm:             false
+video_progress_log:   true
+video_progress_step_pct: 10
+
+eval_policy:
+  first_n_epochs:       40
+  every_n_epochs_first: 1
+  every_n_epochs_after: 1
+
+early_stop:
+  enabled: false
+
+auto_resume_latest: true
+deterministic:              true
+cudnn_benchmark:            false
+deterministic_algorithms:   true
+deterministic_warn_only:    true

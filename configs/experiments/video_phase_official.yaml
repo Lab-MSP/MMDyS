@@ -1,0 +1,11 @@
+# Video branch — official replication config
+# Replicates: msdm_video_phase_v5b_t16_official
+# Best single-seed result used as video checkpoint for AV fusion: seed 123
+name: video_phase_official
+output_dir: outputs/video_phase_official
+seed: 17
+
+data_config:  configs/data/video_phase.yaml
+model_config: configs/model/video_phase_full.yaml
+loss_config:  configs/loss/video_phase.yaml
+train_config: configs/train/video_phase.yaml

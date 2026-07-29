@@ -1,0 +1,42 @@
+# Outputs and checkpoints
+outputs/
+logs/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Model weights
+*.pt
+*.pth
+*.bin
+*.safetensors
+
+# Data caches
+*.npz
+*.npy
+*.h5
+*.hdf5
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+*.env

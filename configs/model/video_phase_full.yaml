@@ -1,0 +1,19 @@
+# PhaseVideoMAEModel (full) — VideoMAE-Small + 14-D flow descriptors
+# Includes recovery_ratio and phase-consensus head.
+# Used as video backbone in AV fusion.
+model_type: full
+
+hf_backbone_name:    MCG-NJU/videomae-small-finetuned-kinetics
+use_pretrained:      true
+videomae_num_frames: 16
+image_size:          224
+interpolate_pos_emb: false
+
+flow_input_dim:        14
+flow_embed_dim:        64
+phase_token_dim:       256
+sample_embed_dim:      256
+classifier_hidden_dim: 256
+consensus_hidden_dim:  128
+num_agg_heads:         4
+dropout:               0.1

@@ -1,0 +1,57 @@
+# Training config for AVFusionModel — Divergence MoE
+# Replicates: msdm_av_fusion_divergence_moe_official
+#
+# Key settings:
+#   5 epochs of joint fine-tuning from pretrained branch checkpoints
+#   audio_backbone_unfreeze_epoch=3 — audio backbone frozen for first 2 epochs
+#   Sub-epoch eval every 500 steps; best checkpoint selected by test f1_final_4cls
+device: cuda:0
+epochs:          5
+batch_size:      16
+eval_batch_size: 8
+
+num_workers:  4
+pin_memory:   false
+
+use_balanced_sampler:  true
+balanced_sampler_mode: severity_subject
+
+# Partial backbone unfreeze
+video_unfreeze_top_k:          3   # VideoMAE blocks 9-11
+audio_unfreeze_top_k:          2   # top-2 Wav2Vec2 transformer blocks
+audio_backbone_unfreeze_epoch: 3   # audio backbone heads-only for epochs 1-2
+
+lr_head:           3.0e-5
+lr_backbone_video: 2.0e-6
+lr_backbone_audio: 1.0e-6
+weight_decay:      0.01
+warmup_ratio:      0.10
+min_lr_ratio:      0.1
+
+max_grad_norm:   1.0
+amp:             true
+amp_dtype:       bfloat16
+label_smoothing: 0.1
+
+# Sub-epoch evaluation every 500 steps (~6× per epoch)
+eval_steps: 500
+
+best_metric:             f1_final_4cls
+best_metric_mode:        max
+best_metric_eps:         1.0e-6
+save_top_k_checkpoints:  3
+
+always_eval_test:    true
+use_test_for_best:   true
+
+early_stop:
+  enabled: false
+
+auto_resume_latest: true
+video_progress_log:      true
+video_progress_step_pct: 20
+
+deterministic:             true
+cudnn_benchmark:           false
+deterministic_algorithms:  true
+deterministic_warn_only:   true

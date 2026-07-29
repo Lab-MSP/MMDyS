@@ -1,0 +1,10 @@
+# Loss weights for AudioTextMMDys (speech/text branch)
+# Best result: msdm_audio_text_v2_official
+lambda_intra:     0.9
+lambda_soft_diag: 0.6
+lambda_ordinal:   0.9
+lambda_ce:        0.3
+
+soft_diag_temperature:    0.06
+ordinal_base_margin:      0.10
+ordinal_gap_margin_scale: 0.14

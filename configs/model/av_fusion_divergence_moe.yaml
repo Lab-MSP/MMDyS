@@ -1,0 +1,35 @@
+# AVFusionModel — Divergence MoE (best approach)
+# Three clinically-motivated difference-vector experts with scalar-norm gate.
+fusion_mode: divergence_moe
+
+# Pretrained branch checkpoints — update these paths after training each branch
+# Video: train with configs/experiments/video_phase_official.yaml, pick best seed checkpoint
+# Audio: train with configs/experiments/audio_text_official.yaml, pick best seed checkpoint
+video_ckpt: /path/to/video_phase_official/seed_X/best_epochXXX.pt
+audio_ckpt: /path/to/audio_text_official/seed_X/best_epochXXX.pt
+
+# Video branch (must match video_phase_full.yaml)
+video_hf_backbone_name: MCG-NJU/videomae-small-finetuned-kinetics
+videomae_num_frames: 16
+image_size:          224
+interpolate_pos_emb: false
+in_channels:         3
+flow_input_dim:      14
+flow_embed_dim:      64
+use_flow_descriptors: true
+phase_token_dim:         256
+sample_embed_dim:        256
+classifier_hidden_dim:   256
+consensus_hidden_dim:    128
+num_agg_heads:           4
+
+# Audio branch (must match audio_text.yaml)
+audio_model_name:            jonatasgrosman/wav2vec2-large-xlsr-53-chinese-zh-cn
+text_model_name:             hfl/chinese-roberta-wwm-ext-large
+projection_dim:              256
+projection_hidden_dim:       256
+audio_classifier_hidden_dim: 512
+
+# Joint fusion head
+joint_classifier_hidden_dim: 256
+dropout: 0.1

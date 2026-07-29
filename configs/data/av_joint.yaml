@@ -1,0 +1,38 @@
+# Joint audio-video data config for AV fusion (divergence_moe)
+train_split_json: /path/to/msdm_official_splits/msdm_train.json
+dev_split_json:   /path/to/msdm_official_splits/msdm_dev.json
+test_split_json:  /path/to/msdm_official_splits/msdm_test.json
+
+# Video
+video_root:        /path/to/MSDM/video
+flow_feature_root: /path/to/MSDM/sea_raft_flow_npz
+
+# 14-D descriptor cache — must be pre-built (scripts/precompute_descriptors.py)
+descriptor_cache_dir:         /path/to/descriptor_cache
+descriptor_cache_write:       false
+descriptor_cache_miss_policy: error
+descriptor_eps: 1.0e-6
+
+# Phase segmentation
+pre_onset_seconds:      1.0
+post_offset_seconds:    0.3
+fallback_pre_seconds:   0.4
+fallback_post_seconds:  0.2
+min_speech_frames:      3
+pre_target_frames:      16
+speech_target_frames:   16
+speech_pad_to_target:   false
+post_target_frames:     5
+
+# Video preprocessing
+resize_height:      224
+resize_half_width:  224
+use_flow_descriptors: true
+require_flow_ok:    false
+runtime_max_retries: 20
+
+# Audio
+wav_root:          /path/to/MSDM/audio/wav
+sample_rate:        16000
+max_audio_seconds:  8.0
+max_text_length:    64

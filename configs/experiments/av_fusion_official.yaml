@@ -1,0 +1,11 @@
+# AV fusion — Divergence MoE official replication config
+# Replicates: msdm_av_fusion_divergence_moe_official
+# Requires trained video and audio branch checkpoints — update paths in av_fusion_divergence_moe.yaml
+name: av_fusion_official
+output_dir: outputs/av_fusion_official
+seed: 14
+
+data_config:  configs/data/av_joint.yaml
+model_config: configs/model/av_fusion_divergence_moe.yaml
+loss_config:  configs/loss/av_fusion.yaml
+train_config: configs/train/av_fusion.yaml

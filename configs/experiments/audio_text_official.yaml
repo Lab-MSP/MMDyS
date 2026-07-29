@@ -1,0 +1,11 @@
+# Audio + text branch — official replication config
+# Replicates: msdm_audio_text_v2_official
+# Best single-seed result used as audio checkpoint for AV fusion: seed 42
+name: audio_text_official
+output_dir: outputs/audio_text_official
+seed: 17
+
+data_config:  configs/data/audio_text.yaml
+model_config: configs/model/audio_text.yaml
+loss_config:  configs/loss/audio_text.yaml
+train_config: configs/train/audio_text.yaml

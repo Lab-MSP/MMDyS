@@ -1,0 +1,7 @@
+# Audio + text model — Wav2Vec2-large-XLSR-53-Chinese + RoBERTa-WWM-ext-large
+audio_model_name:      jonatasgrosman/wav2vec2-large-xlsr-53-chinese-zh-cn
+text_model_name:       hfl/chinese-roberta-wwm-ext-large
+projection_dim:        256
+projection_hidden_dim: 256
+classifier_hidden_dim: 512
+dropout:               0.1

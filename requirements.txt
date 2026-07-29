@@ -1,0 +1,23 @@
+# Requirements for MM_Dys_Repo
+# Extracted from the w2v_tts conda environment — only packages directly used by this repo.
+#
+# Install:
+#   pip install -r requirements.txt
+#
+# CUDA: the environment uses torch 2.7.1 with CUDA 12.6 drivers.
+# Install the matching torch build if not already present:
+#   pip install torch==2.7.1 torchaudio==2.7.1 --index-url https://download.pytorch.org/whl/cu126
+
+torch==2.7.1
+torchaudio==2.7.1
+transformers==4.53.2
+tokenizers==0.21.2
+safetensors==0.5.3
+huggingface-hub==0.33.4
+accelerate==1.9.0
+
+numpy==2.2.6
+scikit-learn==1.7.0
+opencv-python==4.13.0.92
+PyYAML==6.0.2
+tqdm==4.67.1

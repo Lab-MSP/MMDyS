@@ -1,0 +1,70 @@
+# Training config for PhaseVideoMAEModel (both full and flow_only variants)
+# Best result: msdm_video_phase_v5b_t16_official (seed 123, model_type=full)
+#
+# Key settings:
+#   disable_progressive_unfreeze=true  — only VideoMAE blocks 9-11 trained
+#   lr_backbone halved vs earlier runs to prevent overfitting
+device: cuda:0
+epochs:          40
+batch_size:      32
+eval_batch_size: 8
+
+num_workers:              8
+eval_num_workers:         0
+pin_memory:               false
+persistent_workers:       false
+multiprocessing_context:  spawn
+
+use_balanced_sampler:  true
+balanced_sampler_mode: severity_subject
+
+lr_head:      1.0e-4
+lr_backbone:  5.0e-6
+weight_decay: 0.01
+warmup_ratio: 0.15
+scheduler:    cosine_decay
+min_lr_ratio: 0.0
+
+# Keep only last 3 VideoMAE blocks (9-11) unfrozen — no progressive unfreeze
+disable_progressive_unfreeze: true
+
+gradient_accumulation_steps: 1
+max_grad_norm:     1.0
+amp:               true
+amp_dtype:         bfloat16
+gradient_checkpointing: true
+label_smoothing:   0.15
+
+best_metric:                 f1_final_4cls
+best_metric_mode:            max
+best_metric_tiebreaker:      qwk_subject
+best_metric_tiebreaker_mode: max
+best_metric_eps:             1.0e-6
+save_top_k_checkpoints:      3
+
+recompute_ce_weights: true
+always_eval_test:    true
+
+enable_epoch_jsonl:       true
+use_tqdm:                 false
+video_progress_log:       true
+video_progress_step_pct:  10
+video_gpu_memory_log:     true
+
+eval_policy:
+  first_n_epochs:       40
+  every_n_epochs_first: 1
+  every_n_epochs_after: 1
+
+early_stop:
+  enabled:   true
+  patience:  12
+  min_delta: 0.01
+  metric:    f1_final_4cls
+  mode:      max
+
+auto_resume_latest: true
+deterministic:              true
+cudnn_benchmark:            false
+deterministic_algorithms:   true
+deterministic_warn_only:    true

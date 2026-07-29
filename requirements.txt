@@ -1,6 +1,4 @@
-# Requirements for MM_Dys_Repo
-# Extracted from the w2v_tts conda environment — only packages directly used by this repo.
-#
+# Python dependencies for MMDyS
 # Install:
 #   pip install -r requirements.txt
 #

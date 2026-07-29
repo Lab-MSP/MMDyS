@@ -3,15 +3,14 @@
 MMDys — training entry point for the audio+text branch.
 
 Usage:
-  conda run -n w2v_tts python train_audio.py \
-      --config configs/experiments/msdm_audio_text_v1_splitsv2.yaml
+  python train_audio.py --config configs/experiments/audio_text_official.yaml
 
 Multi-seed example:
-  for seed in 17 29 2026; do
-    conda run -n w2v_tts python train_audio.py \
-        --config configs/experiments/msdm_audio_text_v1_splitsv2.yaml \
+  for seed in 17 29 42; do
+    python train_audio.py \
+        --config configs/experiments/audio_text_official.yaml \
         --seed $seed \
-        --output-dir outputs/msdm_audio_text_v1_splitsv2/seed_$seed
+        --output-dir outputs/audio_text_official/seed_$seed
   done
 """
 from __future__ import annotations

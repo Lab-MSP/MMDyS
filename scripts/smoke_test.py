@@ -387,7 +387,7 @@ def main() -> None:
     repo_root = Path(__file__).resolve().parents[1]
     sys.path.insert(0, str(repo_root))
 
-    print("=== MM_Dys_Repo smoke test ===\n")
+    print("=== MMDyS smoke test ===\n")
     tmp = Path(tempfile.mkdtemp(prefix="mmdys_smoke_"))
     try:
         print(f"Generating synthetic fixture in {tmp} ...")

@@ -180,7 +180,10 @@ MMDyS/
 
 ## Dataset
 
-The MSDM dataset is available **by request only**. To obtain access, contact the dataset authors and follow the access procedure described in the original MSDM paper.
+The MSDM dataset is available **by request only**. To obtain access, contact the dataset authors and follow the access procedure described in the original MSDM paper:
+
+> *The Open-Access Mandarin Subacute Stroke Dysarthria Multimodal (MSDM) Database for Intelligent Assessment*
+> [[IEEE Xplore]](https://ieeexplore.ieee.org/document/10799983)
 
 Once access is granted, organise the data in the following layout (exact directory names are your choice — you will point to them in the config files):
 
@@ -391,3 +394,12 @@ Top-level loss functions per branch:
 **Divergence MoE fusion**: Three experts each receive a clinically-motivated difference vector — (1) z_audio − z_text captures speech-text divergence, (2) mean(emb_L − emb_R) across phases captures bilateral lateralization, (3) z_video − z_audio captures cross-modal disagreement. A scalar-norm gate (softmax over L2 norms of each expert input) determines the mixture weights. Each expert is also supervised by an auxiliary CE loss (weight 0.3) to prevent gate collapse.
 
 **Evaluation**: Subject-level prediction averages per-utterance softmax probabilities per speaker then takes argmax. `f1_final_4cls = 10 × f1_subject_macro + f1_sample_macro` is the primary metric used for checkpoint selection.
+
+---
+
+## Reference
+
+If you use the MSDM dataset, please cite the original paper:
+
+> *The Open-Access Mandarin Subacute Stroke Dysarthria Multimodal (MSDM) Database for Intelligent Assessment*
+> [[IEEE Xplore]](https://ieeexplore.ieee.org/document/10799983)

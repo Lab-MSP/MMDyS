@@ -108,15 +108,15 @@ After downloading, set `video_ckpt` and `audio_ckpt` in `configs/model/av_fusion
 > ```bash
 > # Video branch (run first)
 > python train_video.py --config configs/experiments/video_phase_official.yaml \
->     --seed 42 --output-dir outputs/video_phase_official/seed_42
+>     --seed <N> --output-dir outputs/video_phase_official/seed_<N>
 >
 > # Audio + text branch (can run in parallel with video)
 > python train_audio.py --config configs/experiments/audio_text_official.yaml \
->     --seed 42 --output-dir outputs/audio_text_official/seed_42
+>     --seed <N> --output-dir outputs/audio_text_official/seed_<N>
 >
 > # AV fusion (requires checkpoints from both branches above)
 > python train_av.py --config configs/experiments/av_fusion_official.yaml \
->     --seed 42 --output-dir outputs/av_fusion_official/seed_42
+>     --seed <N> --output-dir outputs/av_fusion_official/seed_<N>
 > ```
 > Full multi-seed training is described in [Training](#training-3-step-pipeline).
 
@@ -124,7 +124,7 @@ After downloading, set `video_ckpt` and `audio_ckpt` in `configs/model/av_fusion
 >
 > ```bash
 > python scripts/evaluate.py \
->     --checkpoint outputs/av_fusion_official/seed_42/best.pt \
+>     --checkpoint outputs/av_fusion_official/seed_<N>/best.pt \
 >     --test-split /path/to/msdm/splits/msdm_test.json
 > ```
 
@@ -297,7 +297,7 @@ Set `flow_feature_root` to `<output-dir>/npz` (the npz subdirectory from Step 1)
 ### Step 1 — Video branch
 
 ```bash
-for seed in 17 123 42; do
+for seed in <seed1> <seed2> <seed3>; do
   python train_video.py \
     --config configs/experiments/video_phase_official.yaml \
     --seed $seed \
@@ -310,7 +310,7 @@ Architecture: VideoMAE-Small (16 frames) encodes 6 clips (pre/speech/post × lef
 ### Step 2 — Audio + text branch
 
 ```bash
-for seed in 17 42 29; do
+for seed in <seed1> <seed2> <seed3>; do
   python train_audio.py \
     --config configs/experiments/audio_text_official.yaml \
     --seed $seed \
@@ -325,14 +325,14 @@ Architecture: Wav2Vec2-large-XLSR-53-Chinese + Chinese RoBERTa-WWM-ext-large. Ma
 First update `configs/model/av_fusion_divergence_moe.yaml` with the checkpoint paths from the best single-seed runs of each branch:
 
 ```yaml
-video_ckpt: outputs/video_phase_official/seed_42/best.pt
-audio_ckpt: outputs/audio_text_official/seed_42/best.pt
+video_ckpt: outputs/video_phase_official/seed_<N>/best.pt
+audio_ckpt: outputs/audio_text_official/seed_<N>/best.pt
 ```
 
 Then run:
 
 ```bash
-for seed in 14 42 123; do
+for seed in <seed1> <seed2> <seed3>; do
   python train_av.py \
     --config configs/experiments/av_fusion_official.yaml \
     --seed $seed \
@@ -348,7 +348,7 @@ The AV model loads both branch checkpoints, freezes the audio backbone for the f
 
 ```bash
 python scripts/evaluate.py \
-  --checkpoint outputs/av_fusion_official/seed_42/best.pt \
+  --checkpoint outputs/av_fusion_official/seed_<N>/best.pt \
   --test-split /path/to/msdm_official_splits/msdm_test.json
 ```
 
@@ -358,7 +358,7 @@ Metrics are written to `test_metrics_<suffix>.json` in the checkpoint directory.
 
 ```bash
 python scripts/plot_metrics.py \
-  --json outputs/av_fusion_official/seed_42/test_metrics_best.json
+  --json outputs/av_fusion_official/seed_<N>/test_metrics_best.json
 ```
 
 ---

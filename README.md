@@ -129,7 +129,20 @@ Run SEA-RAFT on the MSDM videos to produce per-utterance `.npz` flow files. Each
 - `flow`: `[T, H, W, 2]` — optical flow vectors (dx, dy)
 - `deform_mag`: `[T, H, W]` — per-pixel flow magnitude
 
-The extraction script we used is in `SEA-RAFT/scripts/extract_msdm_searaft_features.py`; adapt it for your paths and environment. Store all `.npz` files in a flat directory (referred to as `<sea_raft_npz_dir>` below).
+Use `scripts/extract_flow_features.py` (included in this repo), which wraps SEA-RAFT's RAFT model and writes one `.npz` per utterance. It must be able to import from the SEA-RAFT repo — set the `SEA_RAFT_ROOT` environment variable to point to your SEA-RAFT clone:
+
+```bash
+export SEA_RAFT_ROOT=/path/to/SEA-RAFT
+
+python scripts/extract_flow_features.py \
+    --video-dir    /path/to/msdm/video \
+    --output-dir   /path/to/sea_raft_output \
+    --cfg          /path/to/SEA-RAFT/config/eval/spring-M.json \
+    --checkpoint   /path/to/SEA-RAFT/checkpoints/SEA-RAFT-models/Tartan-C-T-TSKH-spring540x960-M.pth \
+    --overwrite
+```
+
+The `.npz` files are written to `<output-dir>/npz/` (referred to as `<sea_raft_npz_dir>` below).
 
 #### Step 2 — Precompute 14-D flow descriptors
 
@@ -156,7 +169,7 @@ After completing both preprocessing steps, fill in the `/path/to/...` placeholde
 | `configs/data/audio_text.yaml` | `train/dev/test_split_json`, `wav_root` |
 | `configs/data/av_joint.yaml` | `train/dev/test_split_json`, `video_root`, `flow_feature_root`, `wav_root`, `descriptor_cache_dir` |
 
-Set `flow_feature_root` to `<sea_raft_npz_dir>` (Step 1 output) and `descriptor_cache_dir` to the `--output-dir` from Step 2.
+Set `flow_feature_root` to `<output-dir>/npz` (the npz subdirectory from Step 1) and `descriptor_cache_dir` to the `--output-dir` from Step 2.
 
 ---
 

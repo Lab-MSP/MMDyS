@@ -2,11 +2,11 @@
 # Three clinically-motivated difference-vector experts with scalar-norm gate.
 fusion_mode: divergence_moe
 
-# Pretrained branch checkpoints — update these paths after training each branch
-# Video: train with configs/experiments/video_phase_official.yaml, pick best seed checkpoint
-# Audio: train with configs/experiments/audio_text_official.yaml, pick best seed checkpoint
-video_ckpt: /path/to/video_phase_official/seed_X/best_epochXXX.pt
-audio_ckpt: /path/to/audio_text_official/seed_X/best_epochXXX.pt
+# Pretrained branch checkpoints.
+# Released checkpoints are available at https://huggingface.co/Lab-MSP/MMDys-AV
+# Download and set the paths below, or train your own with the official experiment configs.
+video_ckpt: /path/to/video_branch/best.pt
+audio_ckpt: /path/to/audio_text_branch/best.pt
 
 # Video branch (must match video_phase_full.yaml)
 video_hf_backbone_name: MCG-NJU/videomae-small-finetuned-kinetics

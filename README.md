@@ -16,6 +16,38 @@ Code for 4-class dysarthria severity classification (normal / mild / moderate / 
 
 ---
 
+## Pretrained checkpoints
+
+Trained weights are hosted on Hugging Face at **[Lab-MSP/MMDys-AV](https://huggingface.co/Lab-MSP/MMDys-AV)** under the CC BY-NC 4.0 license. Access is gated — you will be asked to confirm that you have obtained access to the MSDM dataset through the official request process before downloading.
+
+| Checkpoint | File | Size |
+|---|---|---|
+| Video branch (seed 123) | `video_branch/best.pt` | 95 MB |
+| Audio + text branch (seed 42) | `audio_text_branch/best.pt` | 3.0 GB |
+| AV Divergence MoE — **best result** (seed 14) | `av_fusion/best.pt` | 2.5 GB |
+
+Download with:
+
+```bash
+pip install huggingface_hub
+python - <<'EOF'
+from huggingface_hub import hf_hub_download
+
+repo = "Lab-MSP/MMDys-AV"
+for filename, local in [
+    ("video_branch/best.pt",      "checkpoints/video_branch/best.pt"),
+    ("audio_text_branch/best.pt", "checkpoints/audio_text_branch/best.pt"),
+    ("av_fusion/best.pt",         "checkpoints/av_fusion/best.pt"),
+]:
+    hf_hub_download(repo_id=repo, filename=filename, local_dir=".", local_dir_use_symlinks=False)
+    print(f"Downloaded {filename}")
+EOF
+```
+
+After downloading, set `video_ckpt` and `audio_ckpt` in `configs/model/av_fusion_divergence_moe.yaml` to the local paths of the video and audio+text checkpoints, then run Step 3 of the training pipeline (or go straight to evaluation with `av_fusion/best.pt`).
+
+---
+
 ## Quick start
 
 > **Step 0 — Clone this repo**

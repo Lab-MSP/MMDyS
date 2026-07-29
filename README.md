@@ -191,12 +191,11 @@ Once access is granted, organise the data in the following layout (exact directo
 │   ├── msdm_dev.json
 │   └── msdm_test.json
 ├── video/
-│   ├── N_F_10001_G1_task1_1_S00000.avi
-│   ├── N_F_10001_G1_task1_1_S00001.avi
+│   ├── <utterance_id>.avi
 │   └── ...                               # one .avi per utterance
 └── audio/
     └── wav/
-        ├── N_F_10001_G1_task1_1_S00000.wav
+        ├── <utterance_id>.wav
         └── ...                           # one .wav per utterance
 ```
 
@@ -204,12 +203,12 @@ Once access is granted, organise the data in the following layout (exact directo
 
 ```json
 {
-  "filename":   "N_F_10001_G1_task1_1_S00000",
-  "speaker":    "N_F_10001",
+  "filename":   "<utterance_id>",
+  "speaker":    "<speaker_id>",
   "task":       "task1",
   "severity":   "norm",
   "dur_sec":    1.23,
-  "transcript": "哎"
+  "transcript": "..."
 }
 ```
 

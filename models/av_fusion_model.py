@@ -150,8 +150,8 @@ class AVFusionModel(nn.Module):
                 nn.Linear(classifier_hidden_dim, 4),
             )
             # Expert 2: bilateral lateralization  mean_phase(emb_L − emb_R) → proj [B, 256]
-            # phase_side_embeddings is [B, 3, 2, 448]; emb_L = [:,:,0,:], emb_R = [:,:,1,:]
-            lat_dim = 448
+            # phase_side_embeddings is [B, 3, 2, side_dim]; read side_dim from video model.
+            lat_dim = int(getattr(video_model, "side_dim", 448))
             self.lat_proj = nn.Sequential(
                 nn.Linear(lat_dim, projection_dim),
                 nn.LayerNorm(projection_dim),

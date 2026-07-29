@@ -4,6 +4,7 @@ from data.phase_collate import MSDMPhaseCollator
 from data.audio_text_dataset import MSDMAudioTextDataset
 from data.audio_text_collate import MSDMAudioTextCollator
 from data.video_uniform_dataset import VideoUniformDataset, VideoUniformCollator
+from data.av_dataset import AVDataset, AVCollator
 
 __all__ = [
     "SEVERITY_TO_ID",
@@ -15,4 +16,6 @@ __all__ = [
     "MSDMAudioTextCollator",
     "VideoUniformDataset",
     "VideoUniformCollator",
+    "AVDataset",
+    "AVCollator",
 ]

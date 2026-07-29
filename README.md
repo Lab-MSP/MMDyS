@@ -71,11 +71,11 @@ MM_Dys_Repo/
 
 The MSDM dataset is available **by request only**. To obtain access, contact the dataset authors and follow the access procedure described in the original MSDM paper.
 
-Once access is granted, organise the data in the following layout (the exact directory names under `data/` are your choice — you will point to them in the config files):
+Once access is granted, organise the data in the following layout (exact directory names are your choice — you will point to them in the config files):
 
 ```
-data/
-├── msdm_official_splits/
+/path/to/msdm/
+├── splits/
 │   ├── msdm_train.json
 │   ├── msdm_dev.json
 │   └── msdm_test.json
@@ -83,13 +83,10 @@ data/
 │   ├── N_F_10001_G1_task1_1_S00000.avi
 │   ├── N_F_10001_G1_task1_1_S00001.avi
 │   └── ...                               # one .avi per utterance
-├── audio/
-│   └── wav/
-│       ├── N_F_10001_G1_task1_1_S00000.wav
-│       └── ...                           # one .wav per utterance
-└── sea_raft_flow/
-    ├── N_F_10001_G1_task1_1_S00000.npy
-    └── ...                               # per-frame optical flow magnitudes (SEA-RAFT)
+└── audio/
+    └── wav/
+        ├── N_F_10001_G1_task1_1_S00000.wav
+        └── ...                           # one .wav per utterance
 ```
 
 **Split JSON format** — each file is a JSON array where every element has:
@@ -105,15 +102,7 @@ data/
 }
 ```
 
-`filename` is the bare stem used to locate `video/<filename>.avi`, `audio/wav/<filename>.wav`, and `sea_raft_flow/<filename>.npy`. `severity` must be one of `norm`, `mild`, `moderate`, `severe`. `transcript` is required for the audio+text and AV branches.
-
-**After placing the data**, update the `/path/to/...` placeholders in all three data configs:
-
-| File | Keys to update |
-|---|---|
-| `configs/data/video_phase.yaml` | `train/dev/test_split_json`, `video_root`, `flow_feature_root`, `descriptor_cache_dir` |
-| `configs/data/audio_text.yaml` | `train/dev/test_split_json`, `wav_root` |
-| `configs/data/av_joint.yaml` | `train/dev/test_split_json`, `video_root`, `flow_feature_root`, `wav_root`, `descriptor_cache_dir` |
+`filename` is the bare stem used to locate `video/<filename>.avi` and `audio/wav/<filename>.wav`. `severity` must be one of `norm`, `mild`, `moderate`, `severe`. `transcript` is required for the audio+text and AV branches.
 
 ### Requirements
 
@@ -122,20 +111,52 @@ pip install torch==2.7.1 torchaudio==2.7.1 --index-url https://download.pytorch.
 pip install -r requirements.txt
 ```
 
-### Precompute flow descriptors
+### Preprocessing (video and AV branches)
 
-Run once before training video or AV models:
+The video and AV fusion branches require two preprocessing steps before training. Audio-only training can skip this section.
+
+#### Step 1 — Optical flow extraction with SEA-RAFT
+
+Clone and set up [SEA-RAFT](https://github.com/princeton-vl/SEA-RAFT):
+
+```bash
+git clone https://github.com/princeton-vl/SEA-RAFT.git /path/to/SEA-RAFT
+cd /path/to/SEA-RAFT
+# follow the SEA-RAFT README to install dependencies and download model weights
+```
+
+Run SEA-RAFT on the MSDM videos to produce per-utterance `.npz` flow files. Each output file (`<filename>.npz`) contains:
+- `flow`: `[T, H, W, 2]` — optical flow vectors (dx, dy)
+- `deform_mag`: `[T, H, W]` — per-pixel flow magnitude
+
+The extraction script we used is in `SEA-RAFT/scripts/extract_msdm_searaft_features.py`; adapt it for your paths and environment. Store all `.npz` files in a flat directory (referred to as `<sea_raft_npz_dir>` below).
+
+#### Step 2 — Precompute 14-D flow descriptors
+
+Run once after Step 1, before training:
 
 ```bash
 python scripts/precompute_descriptors.py \
-    --video-root /path/to/MSDM/video \
-    --npz-root   /path/to/MSDM/sea_raft_flow_npz \
-    --split-dir  /path/to/msdm_official_splits \
+    --video-root /path/to/msdm/video \
+    --npz-root   <sea_raft_npz_dir> \
+    --split-dir  /path/to/msdm/splits \
     --output-dir /path/to/descriptor_cache \
     --workers 8
 ```
 
-Set `descriptor_cache_dir` in `configs/data/video_phase.yaml` and `configs/data/av_joint.yaml` to the output directory.
+This reads each SEA-RAFT `.npz` alongside its `.avi` file and writes a single per-utterance `.npz` into `--output-dir` containing the 14-D descriptor vector for each phase × hemiface combination.
+
+#### Update config paths
+
+After completing both preprocessing steps, fill in the `/path/to/...` placeholders in the data configs:
+
+| Config file | Keys to update |
+|---|---|
+| `configs/data/video_phase.yaml` | `train/dev/test_split_json`, `video_root`, `flow_feature_root`, `descriptor_cache_dir` |
+| `configs/data/audio_text.yaml` | `train/dev/test_split_json`, `wav_root` |
+| `configs/data/av_joint.yaml` | `train/dev/test_split_json`, `video_root`, `flow_feature_root`, `wav_root`, `descriptor_cache_dir` |
+
+Set `flow_feature_root` to `<sea_raft_npz_dir>` (Step 1 output) and `descriptor_cache_dir` to the `--output-dir` from Step 2.
 
 ---
 

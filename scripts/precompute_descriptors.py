@@ -321,14 +321,14 @@ def _collect_samples(
 
 def main() -> None:
     p = argparse.ArgumentParser(description="Precompute 14-D flow descriptor cache v2")
-    p.add_argument("--video-root", type=Path,
-        default=Path("/data/user_data/kroseroj/datasets/MSDM/Speech_Recognition_Task/video"))
-    p.add_argument("--npz-root", type=Path,
-        default=Path("/data/user_data/kroseroj/datasets/MSDM/Speech_Recognition_Task/video_deform_mask/npz"))
-    p.add_argument("--split-dir", type=Path,
-        default=Path("/data/user_data/kroseroj/datasets/MSDM/Speech_Recognition_Task/msdm_baseline_splits_v2"))
-    p.add_argument("--output-dir", type=Path,
-        default=Path("/data/user_data/kroseroj/AV_SPEECH/MMDys-Claude/outputs/descriptor_cache_v2"))
+    p.add_argument("--video-root", type=Path, required=True,
+        help="Root directory containing per-utterance .avi files")
+    p.add_argument("--npz-root", type=Path, required=True,
+        help="Root directory of SEA-RAFT output .npz files (one per utterance)")
+    p.add_argument("--split-dir", type=Path, required=True,
+        help="Directory containing msdm_train.json, msdm_dev.json, msdm_test.json")
+    p.add_argument("--output-dir", type=Path, required=True,
+        help="Where to write descriptor cache .npz files")
     p.add_argument("--workers", type=int, default=8)
     p.add_argument("--overwrite", action="store_true",
         help="Recompute even if output file already exists")

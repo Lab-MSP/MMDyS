@@ -67,17 +67,53 @@ MM_Dys_Repo/
 
 ## Prerequisites
 
-### Data
+### Dataset access
 
-Set all `/path/to/...` placeholders in `configs/data/*.yaml` to point at your MSDM dataset:
+The MSDM dataset is available **by request only**. To obtain access, contact the dataset authors and follow the access procedure described in the original MSDM paper.
 
-| Config key | Description |
+Once access is granted, organise the data in the following layout (the exact directory names under `data/` are your choice — you will point to them in the config files):
+
+```
+data/
+├── msdm_official_splits/
+│   ├── msdm_train.json
+│   ├── msdm_dev.json
+│   └── msdm_test.json
+├── video/
+│   ├── N_F_10001_G1_task1_1_S00000.avi
+│   ├── N_F_10001_G1_task1_1_S00001.avi
+│   └── ...                               # one .avi per utterance
+├── audio/
+│   └── wav/
+│       ├── N_F_10001_G1_task1_1_S00000.wav
+│       └── ...                           # one .wav per utterance
+└── sea_raft_flow/
+    ├── N_F_10001_G1_task1_1_S00000.npy
+    └── ...                               # per-frame optical flow magnitudes (SEA-RAFT)
+```
+
+**Split JSON format** — each file is a JSON array where every element has:
+
+```json
+{
+  "filename":   "N_F_10001_G1_task1_1_S00000",
+  "speaker":    "N_F_10001",
+  "task":       "task1",
+  "severity":   "norm",
+  "dur_sec":    1.23,
+  "transcript": "哎"
+}
+```
+
+`filename` is the bare stem used to locate `video/<filename>.avi`, `audio/wav/<filename>.wav`, and `sea_raft_flow/<filename>.npy`. `severity` must be one of `norm`, `mild`, `moderate`, `severe`. `transcript` is required for the audio+text and AV branches.
+
+**After placing the data**, update the `/path/to/...` placeholders in all three data configs:
+
+| File | Keys to update |
 |---|---|
-| `*_split_json` | Train/dev/test split JSON files |
-| `video_root` | Directory of `.avi` video files |
-| `flow_feature_root` | Directory of SEA-RAFT optical flow NPZ files |
-| `wav_root` | Directory of `.wav` audio files |
-| `descriptor_cache_dir` | Output directory for precomputed 14-D flow descriptors |
+| `configs/data/video_phase.yaml` | `train/dev/test_split_json`, `video_root`, `flow_feature_root`, `descriptor_cache_dir` |
+| `configs/data/audio_text.yaml` | `train/dev/test_split_json`, `wav_root` |
+| `configs/data/av_joint.yaml` | `train/dev/test_split_json`, `video_root`, `flow_feature_root`, `wav_root`, `descriptor_cache_dir` |
 
 ### Requirements
 

@@ -17,11 +17,15 @@ build/
 *.bin
 *.safetensors
 
-# Data caches
+# Data caches and media
 *.npz
 *.npy
 *.h5
 *.hdf5
+*.avi
+*.wav
+*.mp4
+*.mp3
 
 # Jupyter
 .ipynb_checkpoints/

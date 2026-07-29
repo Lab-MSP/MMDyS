@@ -39,7 +39,7 @@ for filename, local in [
     ("audio_text_branch/best.pt", "checkpoints/audio_text_branch/best.pt"),
     ("av_fusion/best.pt",         "checkpoints/av_fusion/best.pt"),
 ]:
-    hf_hub_download(repo_id=repo, filename=filename, local_dir=".", local_dir_use_symlinks=False)
+    hf_hub_download(repo_id=repo, filename=filename, local_dir="checkpoints")
     print(f"Downloaded {filename}")
 EOF
 ```

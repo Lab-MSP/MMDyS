@@ -397,9 +397,25 @@ Top-level loss functions per branch:
 
 ---
 
-## Reference
+## Citation
 
-If you use the MSDM dataset, please cite the original paper:
+If you use this repository, please cite our paper:
+
+```bibtex
+@inproceedings{rosero2026mmdys,
+  author    = {Karen Rosero and Chi-Chun Lee and Rami R. Hallac and Carlos Busso},
+  title     = {Multimodal Biomarkers of Dysarthria: Severity-Conditioned Contrastive Alignment of Speech, Text, and Facial Asymmetry},
+  booktitle = {Proceedings of the International Conference on Multimodal Interaction (ICMI '26)},
+  year      = {2026},
+  month     = {October},
+  address   = {Napoli, Italy},
+  publisher = {ACM},
+  doi       = {10.1145/3776574.3831166},
+  url       = {https://doi.org/10.1145/3776574.3831166}
+}
+```
+
+If you use the MSDM dataset, please also cite the original dataset paper:
 
 > *The Open-Access Mandarin Subacute Stroke Dysarthria Multimodal (MSDM) Database for Intelligent Assessment*
 > [[IEEE Xplore]](https://ieeexplore.ieee.org/document/10799983)

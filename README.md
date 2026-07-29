@@ -2,6 +2,8 @@
 
 **Severity-Conditioned Contrastive Alignment of Speech, Text, and Facial Asymmetry**
 
+[![License: CC BY-NC 4.0](https://img.shields.io/badge/License-CC%20BY--NC%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc/4.0/)
+
 <p align="center">
   <img src="AV_Dysarthria_diagram.jpg" alt="MMDyS Framework Overview" width="700"/>
 </p>

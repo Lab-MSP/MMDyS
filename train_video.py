@@ -25,7 +25,7 @@ import torch.multiprocessing as mp
 from torch.utils.data import DataLoader, WeightedRandomSampler
 
 from data import MSDMPhaseCollator, MSDMPhaseDataset, VideoUniformCollator, VideoUniformDataset
-from models import PhaseVideoMAEModel, PhaseVideoMAEModelV6, VideoUniformWindowModel
+from models import PhaseVideoMAEModel
 from trainers import SeverityGuidedTrainer
 from utils import load_experiment_config, save_json, set_seed
 
@@ -311,20 +311,8 @@ def main() -> None:
         num_agg_heads=int(model_cfg.get("num_agg_heads", 4)),
         dropout=float(model_cfg.get("dropout", 0.1)),
     )
-    if backbone_type == "video_uniform":
-        model = VideoUniformWindowModel(**shared_kwargs)
-        print(f"[model] VideoUniformWindowModel loaded")
-    elif backbone_type == "phase_videomae_v6":
-        model = PhaseVideoMAEModelV6(
-            **shared_kwargs,
-            num_tasks=int(model_cfg.get("num_tasks", 8)),
-            task_embed_dim=int(model_cfg.get("task_embed_dim", 64)),
-            adapter_hidden_dim=int(model_cfg.get("adapter_hidden_dim", 256)),
-        )
-        print(f"[model] PhaseVideoMAEModelV6 loaded")
-    else:
-        model = PhaseVideoMAEModel(**shared_kwargs)
-        print(f"[model] PhaseVideoMAEModel loaded")
+    model = PhaseVideoMAEModel(**shared_kwargs)
+    print(f"[model] PhaseVideoMAEModel loaded")
 
     # ---- Resume / init checkpoint ------------------------------------------
     resume_payload = None

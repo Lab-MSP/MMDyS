@@ -31,13 +31,25 @@ import torch.nn.functional as F
 from tqdm import tqdm
 
 
-# This script must be run from inside the SEA-RAFT repository root, or with
-# SEA-RAFT/core on PYTHONPATH, since it imports RAFT and its utilities directly.
-SEA_RAFT_ROOT = Path(os.environ.get("SEA_RAFT_ROOT", ""))
+# This script imports RAFT internals directly; SEA-RAFT must be on the path.
+# Set SEA_RAFT_ROOT to the root of your SEA-RAFT clone before running:
+#   export SEA_RAFT_ROOT=/path/to/SEA-RAFT
+_sea_raft_root_env = os.environ.get("SEA_RAFT_ROOT", "")
+if not _sea_raft_root_env:
+    print(
+        "ERROR: SEA_RAFT_ROOT environment variable is not set.\n"
+        "Clone SEA-RAFT and set the variable before running this script:\n"
+        "  git clone https://github.com/princeton-vl/SEA-RAFT.git /path/to/SEA-RAFT\n"
+        "  export SEA_RAFT_ROOT=/path/to/SEA-RAFT",
+        file=sys.stderr,
+    )
+    sys.exit(1)
+
+SEA_RAFT_ROOT = Path(_sea_raft_root_env)
 CORE_DIR = SEA_RAFT_ROOT / "core"
 if CORE_DIR.exists() and str(CORE_DIR) not in sys.path:
     sys.path.insert(0, str(CORE_DIR))
-if SEA_RAFT_ROOT.exists() and str(SEA_RAFT_ROOT) not in sys.path:
+if str(SEA_RAFT_ROOT) not in sys.path:
     sys.path.insert(0, str(SEA_RAFT_ROOT))
 
 from config.parser import json_to_args
@@ -558,7 +570,7 @@ def main() -> None:
     output_dir = Path(run_args.output_dir).expanduser().resolve()
     cfg_path = Path(run_args.cfg).expanduser().resolve()
     ckpt_path = Path(run_args.checkpoint).expanduser().resolve()
-    landmark_dir = Path(run_args.landmark_dir).expanduser().resolve()
+    landmark_dir = Path(run_args.landmark_dir).expanduser().resolve() if run_args.landmark_dir else None
     output_dir.mkdir(parents=True, exist_ok=True)
     npz_dir = output_dir / "npz"
     flow_mag_dir = output_dir / "flow_mag"
@@ -575,8 +587,8 @@ def main() -> None:
         raise FileNotFoundError(f"--cfg not found: {cfg_path}")
     if not ckpt_path.exists():
         raise FileNotFoundError(f"--checkpoint not found: {ckpt_path}")
-    if run_args.mask_below_jaw and not landmark_dir.exists():
-        raise FileNotFoundError(f"--landmark-dir not found: {landmark_dir}")
+    if run_args.mask_below_jaw and (landmark_dir is None or not landmark_dir.exists()):
+        raise FileNotFoundError(f"--mask-below-jaw requires --landmark-dir; got: {landmark_dir}")
 
     videos = list_videos(video_dir, run_args.limit)
     if not videos:

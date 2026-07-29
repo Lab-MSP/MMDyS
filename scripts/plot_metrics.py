@@ -131,10 +131,8 @@ def _plot_task_bar(ax, f1_by_group: dict[str, float]) -> None:
 def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser(description="Plot test metrics from JSON")
     p.add_argument(
-        "--json", type=Path, required=False,
-        default=Path("/data/user_data/kroseroj/AV_SPEECH/MMDys-Claude/outputs/"
-                     "msdm_av_fusion_moe_v4_official/seed_17/test_metrics_best.json"),
-        help="Path to test_metrics_best.json",
+        "--json", type=Path, required=True,
+        help="Path to test_metrics_best.json produced by evaluate.py or training",
     )
     p.add_argument(
         "--out", type=Path, default=None,

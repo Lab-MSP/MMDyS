@@ -30,7 +30,7 @@ MMDyS addresses these gaps through:
 
 | Metric | Value |
 |--------|-------|
-| `f1_final_4cls` | 10.009 (seed 14) |
+| `f1_final_4cls` | 10.009 |
 | `f1_subject_macro_4cls` | 0.922 |
 | `f1_sample_macro_4cls` | 0.787 |
 
@@ -42,9 +42,9 @@ Trained weights are hosted on Hugging Face at **[Lab-MSP/MMDys-AV](https://huggi
 
 | Checkpoint | File | Size |
 |---|---|---|
-| Video branch (seed 123) | `video_branch/best.pt` | 95 MB |
-| Audio + text branch (seed 42) | `audio_text_branch/best.pt` | 3.0 GB |
-| AV Divergence MoE — **best result** (seed 14) | `av_fusion/best.pt` | 2.5 GB |
+| Video branch | `video_branch/best.pt` | 95 MB |
+| Audio + text branch | `audio_text_branch/best.pt` | 3.0 GB |
+| AV Divergence MoE — **best result** | `av_fusion/best.pt` | 2.5 GB |
 
 Download with:
 
@@ -116,7 +116,7 @@ After downloading, set `video_ckpt` and `audio_ckpt` in `configs/model/av_fusion
 >
 > # AV fusion (requires checkpoints from both branches above)
 > python train_av.py --config configs/experiments/av_fusion_official.yaml \
->     --seed 14 --output-dir outputs/av_fusion_official/seed_14
+>     --seed 42 --output-dir outputs/av_fusion_official/seed_42
 > ```
 > Full multi-seed training is described in [Training](#training-3-step-pipeline).
 
@@ -124,7 +124,7 @@ After downloading, set `video_ckpt` and `audio_ckpt` in `configs/model/av_fusion
 >
 > ```bash
 > python scripts/evaluate.py \
->     --checkpoint outputs/av_fusion_official/seed_14/best_e001s000500.pt \
+>     --checkpoint outputs/av_fusion_official/seed_42/best.pt \
 >     --test-split /path/to/msdm/splits/msdm_test.json
 > ```
 
@@ -322,8 +322,8 @@ Architecture: Wav2Vec2-large-XLSR-53-Chinese + Chinese RoBERTa-WWM-ext-large. Ma
 First update `configs/model/av_fusion_divergence_moe.yaml` with the checkpoint paths from the best single-seed runs of each branch:
 
 ```yaml
-video_ckpt: outputs/video_phase_official/seed_123/best_epochXXX.pt
-audio_ckpt: outputs/audio_text_official/seed_42/best_epochXXX.pt
+video_ckpt: outputs/video_phase_official/seed_42/best.pt
+audio_ckpt: outputs/audio_text_official/seed_42/best.pt
 ```
 
 Then run:
@@ -345,7 +345,7 @@ The AV model loads both branch checkpoints, freezes the audio backbone for the f
 
 ```bash
 python scripts/evaluate.py \
-  --checkpoint outputs/av_fusion_official/seed_14/best_e001s000500.pt \
+  --checkpoint outputs/av_fusion_official/seed_42/best.pt \
   --test-split /path/to/msdm_official_splits/msdm_test.json
 ```
 
@@ -355,7 +355,7 @@ Metrics are written to `test_metrics_<suffix>.json` in the checkpoint directory.
 
 ```bash
 python scripts/plot_metrics.py \
-  --json outputs/av_fusion_official/seed_14/test_metrics_best.json
+  --json outputs/av_fusion_official/seed_42/test_metrics_best.json
 ```
 
 ---

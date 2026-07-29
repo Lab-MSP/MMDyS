@@ -3,7 +3,7 @@ Audio + text severity classification model for MMDys.
 Architecture: Wav2Vec2 (audio) + RoBERTa (text), masked attentive pooling,
 concat fusion with abs-diff, 4-class severity head.
 
-Adapted from MMDys-CL/models/mmdyscl_model.py using run5 hyperparameters:
+Architecture hyperparameters:
   audio: jonatasgrosman/wav2vec2-large-xlsr-53-chinese-zh-cn
   text:  hfl/chinese-roberta-wwm-ext-large
   projection_dim: 256, classifier_hidden_dim: 512, dropout: 0.1
@@ -140,7 +140,7 @@ class AudioTextMMDys(nn.Module):
         }
 
     # ------------------------------------------------------------------
-    # Parameter setup — mirrors MMDys-CL configure_single_loop_training
+    # Parameter setup
     # ------------------------------------------------------------------
 
     @staticmethod

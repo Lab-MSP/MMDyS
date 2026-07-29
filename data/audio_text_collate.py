@@ -1,6 +1,5 @@
 """
 Batch collator for the audio+text branch.
-Adapted from MMDys-CL/data/collate.py.
 """
 from __future__ import annotations
 

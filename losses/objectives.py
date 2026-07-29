@@ -217,7 +217,7 @@ def compute_audio_text_loss(
     Loss for the audio+text branch (AudioTextMMDys).
 
     Expects outputs keys: severity_logits, z_audio, z_text, similarity
-    Uses MSE intra-similarity and cross-modal soft-diagonal (matching MMDys-CL run5).
+    Uses MSE intra-similarity and cross-modal soft-diagonal InfoNCE.
     Ordinal loss uses cosine similarity as rank signal.
     """
     loss_cfg = cfg["loss"]

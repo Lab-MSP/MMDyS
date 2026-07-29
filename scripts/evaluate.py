@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-evaluate.py — standalone evaluation for a trained MMDys-Claude checkpoint.
+evaluate.py — standalone evaluation for a trained MMDys checkpoint.
 
 Loads a saved best.pt (or any .pt checkpoint), runs inference on one or more
 splits (test by default), and writes metrics JSON to the checkpoint's output dir
@@ -35,7 +35,7 @@ from utils.io import save_json
 
 
 def parse_args() -> argparse.Namespace:
-    p = argparse.ArgumentParser(description="Standalone evaluation for MMDys-Claude")
+    p = argparse.ArgumentParser(description="Standalone evaluation for MMDys")
     p.add_argument(
         "--checkpoint", type=Path, required=True,
         help="Path to a .pt checkpoint file (e.g. best.pt)",

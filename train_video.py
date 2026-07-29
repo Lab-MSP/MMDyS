@@ -31,7 +31,7 @@ from utils import load_experiment_config, save_json, set_seed
 
 
 def parse_args() -> argparse.Namespace:
-    p = argparse.ArgumentParser(description="MMDys-Claude video branch training")
+    p = argparse.ArgumentParser(description="MMDys video branch training")
     p.add_argument("--config", type=Path, required=True, help="Path to experiment YAML")
     p.add_argument("--output-dir", type=Path, default=None, help="Override output directory")
     p.add_argument("--seed", type=int, default=None, help="Override random seed")

@@ -1,10 +1,28 @@
-# MM_Dys_Repo — Multimodal Dysarthria Severity Classification
+# MMDyS: Multimodal Biomarkers of Dysarthria
 
-Code for 4-class dysarthria severity classification (normal / mild / moderate / severe) from the MSDM dataset using audio, text, and video modalities.
+**Severity-Conditioned Contrastive Alignment of Speech, Text, and Facial Asymmetry**
 
-**Task**: Predict dysarthria severity from short speech samples across 8 tasks (syllable, character, word, sentences). 4 severity classes with ordinal targets mapped to [1.0, 2/3, 1/3, 0.0].
+<p align="center">
+  <img src="AV_Dysarthria_diagram.jpg" alt="MMDyS Framework Overview" width="700"/>
+</p>
 
-**Primary metric**: `f1_final_4cls = 10 × subject-level macro-F1 + sample-level macro-F1`. Subject-level prediction averages per-utterance softmax probabilities per speaker then takes argmax.
+This repository contains the official implementation of *MMDyS*, a framework for multimodal dysarthria severity assessment that aligns speech, text, and facial visual biomarkers.
+
+## Overview
+
+Dysarthria is a motor speech disorder that impairs speech production. Accurate severity assessment can benefit from combining acoustic and visual biomarkers, yet most existing systems underuse facial motion, asymmetry, and the relationship between produced speech and its intended linguistic content.
+
+MMDyS addresses these gaps through:
+
+- **Severity-conditioned contrastive alignment** — treats speech–text mismatch as a continuous signal of impairment rather than a binary correspondence.
+- **Facial asymmetry modeling** — leverages hemiface lateralization to capture asymmetric articulatory patterns, complemented by temporal segmentation and flow motion descriptors.
+- **Mixture-of-experts fusion** — integrates speech, text, and visual representations with cross-modal alignment, enabling adaptive weighting of each modality's evidence.
+
+---
+
+## Results
+
+4-class severity classification (normal / mild / moderate / severe) on the MSDM dataset. Primary metric: `f1_final_4cls = 10 × subject-level macro-F1 + sample-level macro-F1`.
 
 **Best approach**: Audio-Visual Divergence MoE fusion — three clinically-motivated difference-vector experts (speech-text divergence, bilateral lateralization, cross-modal divergence), gated by their L2 norms.
 
@@ -53,8 +71,8 @@ After downloading, set `video_ckpt` and `audio_ckpt` in `configs/model/av_fusion
 > **Step 0 — Clone this repo**
 >
 > ```bash
-> git clone <repo-url> MM_Dys_Repo
-> cd MM_Dys_Repo
+> git clone https://github.com/Lab-MSP/MMDyS.git
+> cd MMDyS
 > ```
 
 > **Step 1 — Install dependencies**
@@ -113,7 +131,7 @@ After downloading, set `video_ckpt` and `audio_ckpt` in `configs/model/av_fusion
 ## Repository layout
 
 ```
-MM_Dys_Repo/
+MMDyS/
 ├── data/
 │   ├── constants.py            # Severity → id / ordinal target mappings
 │   ├── audio_text_dataset.py   # Wav + transcript dataset loader

@@ -147,7 +147,7 @@ def _build_audio_dataset(cfg: Dict, split: str) -> MSDMAudioTextDataset:
 # ---------------------------------------------------------------------------
 
 def parse_args() -> argparse.Namespace:
-    p = argparse.ArgumentParser(description="MMDys-Claude Exp 2: cross-modal fine-tuning")
+    p = argparse.ArgumentParser(description="MMDys AV fusion branch training")
     p.add_argument("--config",     type=Path, required=True)
     p.add_argument("--output-dir", type=Path, default=None)
     p.add_argument("--seed",       type=int,  default=None)

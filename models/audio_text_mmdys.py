@@ -1,5 +1,5 @@
 """
-Audio + text severity classification model for MMDys-Claude.
+Audio + text severity classification model for MMDys.
 Architecture: Wav2Vec2 (audio) + RoBERTa (text), masked attentive pooling,
 concat fusion with abs-diff, 4-class severity head.
 

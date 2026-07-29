@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-MMDys-Claude — training entry point for the audio+text branch.
+MMDys — training entry point for the audio+text branch.
 
 Usage:
   conda run -n w2v_tts python train_audio.py \
@@ -32,7 +32,7 @@ from utils import load_experiment_config, save_json, set_seed
 
 
 def parse_args() -> argparse.Namespace:
-    p = argparse.ArgumentParser(description="MMDys-Claude audio+text branch training")
+    p = argparse.ArgumentParser(description="MMDys audio+text branch training")
     p.add_argument("--config", type=Path, required=True, help="Path to experiment YAML")
     p.add_argument("--output-dir", type=Path, default=None, help="Override output directory")
     p.add_argument("--seed", type=int, default=None, help="Override random seed")

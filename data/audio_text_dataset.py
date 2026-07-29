@@ -1,6 +1,5 @@
 """
-Audio+text dataset for MMDys-Claude speech branch.
-Adapted from MMDys-CL/data/dataset.py to use msdm_baseline_splits_v2.
+Audio+text dataset for MMDys speech branch.
 """
 from __future__ import annotations
 
